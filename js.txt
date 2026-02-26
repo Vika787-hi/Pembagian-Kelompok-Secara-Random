@@ -1,0 +1,60 @@
+// script.js
+function generateTeams() {
+    const teamCount = document.getElementById('teamCount').value;
+    const participants = document.getElementById('participants').value.split(',');
+
+    // Validasi input
+    if (!teamCount || teamCount < 1) {
+        alert("Harap masukkan jumlah tim yang valid.");
+        return;
+    }
+    if (participants.length < teamCount) {
+        alert("Jumlah peserta harus lebih banyak dari jumlah tim.");
+        return;
+    }
+
+    // Mengacak urutan peserta
+    shuffleArray(participants);
+
+    // Membagi peserta ke dalam tim
+    const teams = [];
+    for (let i = 0; i < teamCount; i++) {
+        teams.push([]);
+    }
+
+    // Membagi peserta ke tim
+    participants.forEach((participant, index) => {
+        teams[index % teamCount].push(participant.trim());
+    });
+
+    // Menampilkan hasil
+    displayResults(teams);
+}
+
+// Fungsi untuk mengacak array (Fisher-Yates shuffle)
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap elemen
+    }
+}
+
+// Fungsi untuk menampilkan hasil
+function displayResults(teams) {
+    const resultSection = document.getElementById('result');
+    resultSection.innerHTML = ""; // Menghapus hasil sebelumnya
+
+    const table = document.createElement('table');
+    const header = document.createElement('tr');
+    header.innerHTML = "<th>Tim</th><th>Anggota</th>";
+    table.appendChild(header);
+
+    // Menambahkan baris untuk setiap tim
+    teams.forEach((team, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>Tim ${index + 1}</td><td>${team.join(', ')}</td>`;
+        table.appendChild(row);
+    });
+
+    resultSection.appendChild(table);
+}
